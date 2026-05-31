@@ -14,20 +14,7 @@ class XDDAdapter:
 
     def __init__(self, project_root: str = "."):
         self.project_root = os.path.abspath(project_root)
-        self.gate_script = self._find_gate_script()
         self.audit_log: List[Dict] = []
-
-    def _find_gate_script(self) -> str:
-        """Find the xdd-gate.py script."""
-        possible_paths = [
-            os.path.join(self.project_root, "scripts", "xdd-gate.py"),
-            os.path.expanduser("~/.local/bin/xdd-gate.py"),
-            "/home/alejandro/Documentos/Desarrollos/scripts/xdd-gate.py"
-        ]
-        for path in possible_paths:
-            if os.path.exists(path):
-                return path
-        return "xdd-gate.py"
 
     def run_pipeline(self, pipeline_path: str) -> Dict:
         """Execute a .xdd pipeline file using the Pipeline engine."""
@@ -46,7 +33,7 @@ class XDDAdapter:
         """Initialize X-DD gate."""
         try:
             result = subprocess.run(
-                ["python3", self.gate_script, "init"],
+                ["xdd", "gate", "init"],
                 capture_output=True,
                 text=True,
                 cwd=self.project_root
@@ -63,7 +50,7 @@ class XDDAdapter:
         """Get X-DD gate status."""
         try:
             result = subprocess.run(
-                ["python3", self.gate_script, "status"],
+                ["xdd", "gate", "status"],
                 capture_output=True,
                 text=True,
                 cwd=self.project_root
@@ -76,7 +63,7 @@ class XDDAdapter:
         """Approve a gate phase."""
         try:
             result = subprocess.run(
-                ["python3", self.gate_script, "approve", f"--phase={phase}", f"--approver={approver}"],
+                ["xdd", "gate", "approve", f"--phase={phase}", f"--approver={approver}"],
                 capture_output=True,
                 text=True,
                 cwd=self.project_root

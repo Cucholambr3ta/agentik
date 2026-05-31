@@ -21,17 +21,22 @@ AGENTIK v5.0 es un agente de desarrollo que integra X-DD como runtime de validac
 
 ## Installation
 
+### From PyPI (when published)
+
 ```bash
-# Clone the repository
+pip install agentik
+```
+
+### From repository
+
+```bash
 git clone https://github.com/Cucholambr3ta/agentik.git
 cd agentik
-
-# Install in development mode
-pip install -e ".[dev]"
-
-# Verify installation
-agentik run "echo 'Hello from AGENTIK'"
+pip install -e .
+agentik --help
 ```
+
+**Prerequisites:** `pip install x-dd` (x-dd is the validation engine)
 
 ## Quick Start
 
