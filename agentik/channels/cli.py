@@ -4,10 +4,11 @@ import sys
 import subprocess
 import json
 from datetime import datetime
+from agentik.core.history import history
 
 
-def run_command(command: str) -> str:
-    """Execute a shell command and return its output."""
+def run_command(command: str) -> tuple[str, int]:
+    """Execute a shell command and return its output and exit code."""
     try:
         result = subprocess.run(
             command,
@@ -16,11 +17,11 @@ def run_command(command: str) -> str:
             text=True,
             timeout=30
         )
-        return result.stdout.strip()
+        return result.stdout.strip(), result.returncode
     except subprocess.TimeoutExpired:
-        return "ERROR: Command timed out"
+        return "ERROR: Command timed out", 1
     except Exception as e:
-        return f"ERROR: {str(e)}"
+        return f"ERROR: {str(e)}", 1
 
 
 def store_in_mempalace(key: str, value: str, wing: str = "Conversations") -> bool:
@@ -41,8 +42,11 @@ def main():
 
     if sys.argv[1] == "run":
         command = sys.argv[2]
-        output = run_command(command)
+        output, exit_code = run_command(command)
         print(output)
+        
+        # Store in history
+        history.add(command, output, exit_code)
         
         # Store in MemPalace
         store_in_mempalace(command, output)
