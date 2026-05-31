@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENTIK v5.0 — Documento de Trabajo para el Agente de Desarrollo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0c10;
+            color: #e4e7ec;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #11161f;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid #2a2f3a;
+        }
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #a5f0ff, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2d3748;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #cbd5e6;
+        }
+        p, li {
+            color: #cbd5e6;
+        }
+        a {
+            color: #74d4ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: #1e2430;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+        }
+        code {
+            padding: 0.2rem 0.4rem;
+            background: #1e293b;
+            color: #b9e6ff;
+        }
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 3px solid #3b82f6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #0f141c;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #2d3748;
+        }
+        th {
+            background: #1a2533;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .note {
+            background: #172032;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.75rem;
+        }
+        .warning {
+            background: #2d1f2a;
+            border-left-color: #f97316;
+        }
+        .card {
+            background: #0f141c;
+            border: 1px solid #2a2f3a;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            height: 1px;
+            background: #2a2f3a;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c7a91;
+        }
+        .badge {
+            display: inline-block;
+            background: #1e293b;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            color: #9ab3db;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🤖 AGENTIK v5.0 — DOCUMENTO DE TRABAJO PARA EL AGENTE DE DESARROLLO</h1>
+    <p><span class="badge">Basado en</span> AGENTIK v5.0 Master Architecture & Build Specification</p>
+    <p><span class="badge">Propósito</span> Guía ejecutable para comenzar la implementación usando x-dd como runtime de validación</p>
+    <p><span class="badge">Estado</span> PRE-DEVELOPMENT → FASE 0 ACTIVA</p>
+    <p><span class="badge">Código existente</span> NO</p>
+
+    <hr>
+
+    <h2>1. Introducción</h2>
+    <p>Este documento es tu guía definitiva, agente de desarrollo. Aquí encontrarás:</p>
+    <ul>
+        <li>La especificación arquitectónica (resumida pero completa).</li>
+        <li>Las instrucciones para <strong>integrar x-dd desde el primer momento</strong>.</li>
+        <li>Los pipelines concretos que debes escribir para validar cada paso.</li>
+        <li>El orden de implementación de la <strong>Fase 0</strong>.</li>
+    </ul>
+    <p>No hay ambigüedad. Cada tarea tiene un pipeline x-dd asociado. Si el pipeline falla, la tarea no está terminada.</p>
+
+    <h2>2. La Regla de Oro (No Negociable)</h2>
+    <div class="warning note">
+        <strong>📌 Nada se considera completado hasta que x-dd lo valide.</strong>
+    </div>
+    <ul>
+        <li>Cada archivo de código que escribas debe tener su correspondiente prueba en x-dd.</li>
+        <li>Cada funcionalidad nueva debe demostrarse con un pipeline que pase.</li>
+        <li>Los receipts (pruebas criptográficas) se generan automáticamente en cada ejecución exitosa.</li>
+    </ul>
+    <p>Si x-dd no dice "PASSED", tú no has terminado.</p>
+
+    <h2>3. Configuración Inicial (Antes de Escribir Código)</h2>
+
+    <h3>3.1. Asume que x-dd está instalado</h3>
+    <p>El usuario ya tiene x-dd funcionando en su sistema. Tú solo llamarás a los comandos:</p>
+    <pre>xdd /xdd-start
+xdd /xdd-build
+xdd /qa-review
+xdd /cierre-fase</pre>
+
+    <h3>3.2. Directorio de trabajo</h3>
+    <p>Crear el repositorio con esta estructura mínima inicial:</p>
+    <pre>agentik/
+├── agentik/
+│   ├── __init__.py
+│   ├── core/
+│   │   └── (vacío por ahora, pero directorio creado)
+│   ├── mempalace/
+│   │   └── (fork vacío, se llenará en tarea 1)
+│   ├── security/
+│   │   └── receipts.py
+│   ├── channels/
+│   │   └── cli.py
+│   └── __main__.py
+├── tests/
+│   └── pipelines/            # archivos .xdd
+├── docs/
+│   └── MASTER_SPEC_v5.0.md
+└── pyproject.toml</pre>
+
+    <h3>3.3. Pipelines de x-dd</h3>
+    <p>Crea un directorio <code>tests/pipelines/</code> y dentro escribe archivos con extensión <code>.xdd</code>.<br>
+    Cada pipeline es una secuencia de comandos x-dd que tú mismo ejecutarás para validar.</p>
+    <p><strong>Ejemplo de pipeline mínimo</strong> (<code>tests/pipelines/fase0_01_import_mempalace.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "from agentik.mempalace import Client; print('ok')"
+/gate assert salida_contiene "ok"
+/cierre-fase</pre>
+
+    <h2>4. Fase 0 — Fundación (Tareas Concretas)</h2>
+    <p>A continuación, las tareas en orden estricto. Cada tarea incluye su pipeline de validación.</p>
+
+    <h3>📦 Tarea 0.1: Fork de MemPalace</h3>
+    <p><strong>Objetivo:</strong> Tener el módulo <code>agentik/mempalace/</code> con el cliente básico funcionando.</p>
+    <p><strong>Acciones:</strong></p>
+    <ol>
+        <li>Copiar el código de MemPalace (MIT) dentro de <code>agentik/mempalace/</code>.</li>
+        <li>Asegurar que <code>from agentik.mempalace import Client</code> no da error.</li>
+        <li>Configurar el directorio de datos en <code>~/.agentik/mempalace/</code>.</li>
+    </ol>
+    <p><strong>Pipeline de validación</strong> (<code>tests/pipelines/tarea_0.1.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "python -c 'from agentik.mempalace import Client; c=Client(); c.store(\"test\", wing=\"Test\"); print(c.recall(\"test\"))'"
+/gate assert salida_contiene "test"
+/cierre-fase</pre>
+    <p><strong>Criterio de éxito:</strong> El pipeline pasa y se genera un receipt en <code>~/.agentik/mempalace/Audit/</code>.</p>
+
+    <h3>⌨️ Tarea 0.2: CLI básica</h3>
+    <p><strong>Objetivo:</strong> Poder ejecutar <code>agentik run "comando"</code> desde la terminal.</p>
+    <p><strong>Acciones:</strong></p>
+    <ol>
+        <li>Implementar <code>agentik/channels/cli.py</code> con un comando <code>run</code> que reciba un string.</li>
+        <li>Conectar ese comando a la ejecución real de x-dd (usando subprocess).</li>
+        <li>Guardar cada ejecución en MemPalace (wing <code>Conversations</code>).</li>
+    </ol>
+    <p><strong>Pipeline de validación</strong> (<code>tests/pipelines/tarea_0.2.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "echo 'hola mundo'"
+/gate assert salida_contiene "hola mundo"
+/agentik mempalace recall "hola mundo" --wing Conversations
+/gate assert salida_contiene "hola mundo"
+/cierre-fase</pre>
+
+    <h3>🔌 Tarea 0.3: Integración x-dd (Adapter)</h3>
+    <p><strong>Objetivo:</strong> El agente puede ejecutar pipelines completos de x-dd.</p>
+    <p><strong>Acciones:</strong></p>
+    <ol>
+        <li>Implementar <code>XDDAdapter</code> en <code>agentik/channels/xdd_adapter.py</code> con métodos:
+            <ul>
+                <li><code>run_pipeline(pipeline_path)</code></li>
+                <li><code>build()</code></li>
+                <li><code>qa_review()</code></li>
+                <li><code>close_phase()</code></li>
+            </ul>
+        </li>
+        <li>Cada método debe generar un receipt y persistirlo en MemPalace (wing <code>Audit</code>).</li>
+    </ol>
+    <p><strong>Pipeline de validación</strong> (<code>tests/pipelines/tarea_0.3.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "from agentik.channels.xdd_adapter import XDDAdapter; a=XDDAdapter(); a.build()"
+/gate assert salida_contiene "Receipt generated"
+/cierre-fase</pre>
+
+    <h3>🔐 Tarea 0.4: Receipts y Seguridad</h3>
+    <p><strong>Objetivo:</strong> Cada acción importante genera un receipt HMAC.</p>
+    <p><strong>Acciones:</strong></p>
+    <ol>
+        <li>Implementar <code>security/receipts.py</code> con funciones:
+            <ul>
+                <li><code>generate_receipt(action, result) -> dict</code></li>
+                <li><code>verify_receipt(receipt) -> bool</code></li>
+            </ul>
+        </li>
+        <li>Usar <code>cryptography</code> o <code>hashlib</code> para HMAC-SHA256.</li>
+        <li>Almacenar cada receipt en MemPalace (wing <code>Audit</code>).</li>
+    </ol>
+    <p><strong>Pipeline de validación</strong> (<code>tests/pipelines/tarea_0.4.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "from agentik.security.receipts import generate_receipt; r=generate_receipt('test','success'); print(r['signature'])"
+/gate assert salida_coincide_regex "[a-f0-9]{64}"
+/cierre-fase</pre>
+
+    <h3>📊 Tarea 0.5: Observabilidad básica</h3>
+    <p><strong>Objetivo:</strong> Exponer métricas mínimas y logs estructurados.</p>
+    <p><strong>Acciones:</strong></p>
+    <ol>
+        <li>Configurar <code>logging</code> en formato JSON.</li>
+        <li>Crear un endpoint interno <code>/metrics</code> (aunque no haya API aún, solo para pruebas internas).</li>
+        <li>Registrar las métricas:
+            <ul>
+                <li><code>agentik_tasks_total</code></li>
+                <li><code>agentik_pipelines_total</code></li>
+                <li><code>agentik_receipts_total</code></li>
+            </ul>
+        </li>
+    </ol>
+    <p><strong>Pipeline de validación</strong> (<code>tests/pipelines/tarea_0.5.xdd</code>):</p>
+    <pre>/xdd-start
+/agentik run "import logging; logging.info('test')"
+/gate assert log_contiene "test"
+/cierre-fase</pre>
+
+    <h2>5. Integración Continua con x-dd</h2>
+    <p>Una vez que la Fase 0 esté completa, debes configurar un pipeline maestro que ejecute <strong>todos</strong> los pipelines de prueba cada vez que se modifique el código.</p>
+    <p><strong>Pipeline maestro (<code>tests/pipelines/fase0_completa.xdd</code>):</strong></p>
+    <pre>/xdd-start
+/xdd-build   # equivalente a ejecutar todas las tareas 0.1 a 0.5 en orden
+/qa-review    # verifica que todos los receipts existen y son válidos
+/cierre-fase</pre>
+    <p>Este pipeline debe ejecutarse automáticamente (por ejemplo, con un hook de git o un scheduler). Si falla, el código no se considera válido.</p>
+
+    <h2>6. Estructura de Receipts para Fase 0</h2>
+    <p>Cada receipt debe seguir este formato:</p>
+    <pre>{
+  "id": "uuid-generado",
+  "timestamp": "2025-01-15T10:00:00Z",
+  "action": "xdd-build | xdd-start | qa-review | cierre-fase | run_command",
+  "actor": "agentik",
+  "result": "success | failure",
+  "pipeline": "nombre_del_pipeline.xdd",
+  "signature": "hmac-sha256"
+}</pre>
+    <p>Todos los receipts se almacenan en MemPalace, wing <code>Audit</code>, con retención permanente.</p>
+
+    <h2>7. Criterios de Aceptación de la Fase 0</h2>
+    <div class="card">
+        <p>La Fase 0 se considera <strong>completada</strong> cuando:</p>
+        <ol>
+            <li>Todos los pipelines de las tareas 0.1 a 0.5 pasan.</li>
+            <li>El pipeline maestro <code>fase0_completa.xdd</code> pasa.</li>
+            <li>Existe al menos un receipt por cada acción significativa.</li>
+            <li>Las métricas básicas son visibles (pueden ser por log).</li>
+            <li>No existe código muerto ni funcionalidades de fases posteriores.</li>
+        </ol>
+    </div>
+
+    <h2>8. Comenzar Ahora Mismo</h2>
+    <div class="note">
+        <strong>📌 Tú, agente de desarrollo, debes:</strong>
+        <ol>
+            <li>Crear el repositorio con la estructura indicada.</li>
+            <li>Escribir los pipelines <code>.xdd</code> <strong>antes</strong> de escribir el código (TDD con x-dd).</li>
+            <li>Implementar cada tarea en orden, validando con su pipeline.</li>
+            <li>No avanzar a la tarea siguiente si la actual no pasa.</li>
+        </ol>
+    </div>
+    <p>El usuario (el humano) confía en que seguirás este documento al pie de la letra.</p>
+
+    <h2>9. Nota Final</h2>
+    <div class="warning note">
+        ⚠️ Este documento es <strong>ejecutable</strong>. No hay interpretación. Cada pipeline es un contrato.<br>
+        Si algo no está claro, vuelve a leer la sección 2 (La Regla de Oro).
+    </div>
+    <p><strong>Buena suerte. La Fase 0 comienza ahora.</strong></p>
+
+    <hr>
+    <footer>
+        🚀 AGENTIK v5.0 — Documento de Trabajo para el Agente de Desarrollo<br>
+        Última actualización: acuerdo final con especificaciones ejecutables y validación mediante x-dd.
+    </footer>
+</div>
+</body>
+</html>

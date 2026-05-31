@@ -1,0 +1,26 @@
+# AGENTIK v5.0 — Perfil del Proyecto
+
+project:
+  name: AGENTIK
+  version: "5.0.0"
+  description: Agente de desarrollo con X-DD como runtime de validación
+  domain: development-agent
+  language: python
+
+pipeline:
+  current_phase: 0
+  phases:
+    - briefing
+    - spec
+    - plan
+    - build
+    - qa
+    - retro
+
+branding:
+  orchestrator_trigger: "xdd"
+  display_name: "AGENTIK"
+
+validation:
+  gate_type: hmac-sha256
+  receipts_enabled: true
