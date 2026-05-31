@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "bash(git *)",
+      "bash(pip *)",
+      "bash(pytest *)",
+      "bash(xdd *)",
+      "bash(mempalace *)",
+      "bash(gitnexus *)"
+    ],
+    "deny": []
+  }
+}

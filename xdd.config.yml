@@ -1,0 +1,33 @@
+# X-DD Configuration for AGENTIK
+
+project:
+  name: AGENTIK
+  version: "5.0.0"
+  domain: development-agent
+
+pipeline:
+  mode: gated
+  phases:
+    - briefing
+    - spec
+    - plan
+    - build
+    - qa
+    - retro
+
+gate:
+  type: hmac-sha256
+  receipts: true
+  storage: mempalace
+
+validation:
+  preflight: true
+  doctor: true
+  mempalace: true
+  gitnexus: true
+
+hooks:
+  post-commit: true
+  pre-push: true
+
+profile: internal

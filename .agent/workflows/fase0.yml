@@ -1,0 +1,16 @@
+# Workflow: Fase 0 - Foundation
+name: fase0-foundation
+trigger: manual
+phases:
+  - name: briefing
+    status: pending
+  - name: spec
+    status: pending
+  - name: plan
+    status: pending
+  - name: build
+    status: pending
+  - name: qa
+    status: pending
+  - name: retro
+    status: pending
