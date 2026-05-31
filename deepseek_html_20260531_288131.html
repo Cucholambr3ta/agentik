@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENTIK v5.0 — Especificación Completa para el Desarrollo (Fases 0-8)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0c10;
+            color: #e4e7ec;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #11161f;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid #2a2f3a;
+        }
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #a5f0ff, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2d3748;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #cbd5e6;
+        }
+        p, li {
+            color: #cbd5e6;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            background: #1e2430;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+        }
+        code {
+            padding: 0.2rem 0.4rem;
+            background: #1e293b;
+            color: #b9e6ff;
+        }
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-left: 3px solid #3b82f6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #0f141c;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #2d3748;
+        }
+        th {
+            background: #1a2533;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .note {
+            background: #172032;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.75rem;
+        }
+        .warning {
+            background: #2d1f2a;
+            border-left-color: #f97316;
+        }
+        .card {
+            background: #0f141c;
+            border: 1px solid #2a2f3a;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        hr {
+            margin: 1.5rem 0;
+            border: none;
+            height: 1px;
+            background: #2a2f3a;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c7a91;
+        }
+        .badge {
+            display: inline-block;
+            background: #1e293b;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            color: #9ab3db;
+        }
+        .phase {
+            background: #0f141c;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #7c3aed;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧠 AGENTIK v5.0 — ESPECIFICACIÓN COMPLETA PARA EL DESARROLLO</h1>
+    <p><span class="badge">ESTADO</span> Activo – Fase 0 en ejecución</p>
+    <p><span class="badge">VERSIÓN</span> 5.0 (Definitiva)</p>
+    <p><span class="badge">LICENCIA</span> MIT</p>
+    <p>Este documento es la <strong>única fuente de verdad</strong> para el desarrollo de AGENTIK. Todas las decisiones técnicas, reglas, fases y validaciones están definidas aquí. El agente de desarrollo debe seguir este plan al pie de la letra hasta la finalización del proyecto.</p>
+
+    <hr>
+
+    <h2>📌 OBJETIVO FINAL</h2>
+    <p>Construir un agente autónomo de desarrollo de software con:</p>
+    <ul>
+        <li>Memoria persistente (MemPalace)</li>
+        <li>Aprendizaje operativo (Hermes)</li>
+        <li>Inteligencia de código (Codex)</li>
+        <li>Seguridad integrada (Aegis + ZeroClaw)</li>
+        <li>Validación continua mediante x-dd</li>
+    </ul>
+    <p>Agentik debe ser capaz de <strong>recordar, analizar, ejecutar, validar y aprender</strong> sin perder trazabilidad.</p>
+
+    <h2>⚡ REGLAS ABSOLUTAS (R1 a R7)</h2>
+    <div class="grid-2">
+        <div class="card"><strong>R1</strong><br>Toda acción relevante genera un receipt.</div>
+        <div class="card"><strong>R2</strong><br>Toda acción relevante se almacena en MemPalace.</div>
+        <div class="card"><strong>R3</strong><br>Ningún cambio se considera válido sin aprobación de x-dd.</div>
+        <div class="card"><strong>R4</strong><br>Ningún módulo puede acceder directamente a otro si existe Event Bus.</div>
+        <div class="card"><strong>R5</strong><br>La seguridad tiene prioridad sobre la autonomía.</div>
+        <div class="card"><strong>R6</strong><br>Auto-mejora prohibida hasta Fase 7.</div>
+        <div class="card"><strong>R7</strong><br>No usar código copiado de proyectos incompatibles con MIT.</div>
+    </div>
+
+    <h2>🏛️ PRINCIPIOS ARQUITECTÓNICOS (P1 a P6)</h2>
+    <ul>
+        <li><strong>P1 — Memory First:</strong> Toda información relevante debe poder recuperarse posteriormente.</li>
+        <li><strong>P2 — Test Before Trust:</strong> Todo cambio debe ser validado mediante x-dd.</li>
+        <li><strong>P3 — Security Before Execution:</strong> Seguridad > Funcionalidad > Conveniencia.</li>
+        <li><strong>P4 — Explainability:</strong> Toda acción debe responder qué, por qué y con qué evidencia.</li>
+        <li><strong>P5 — Modularidad Absoluta:</strong> Los componentes deben ser reemplazables sin afectar al resto.</li>
+        <li><strong>P6 — Event Driven:</strong> Los módulos se comunican mediante eventos.</li>
+    </ul>
+
+    <h2>📦 STACK OFICIAL</h2>
+    <ul>
+        <li><strong>Backend:</strong> Python 3.11+, FastAPI, Pydantic, Uvicorn</li>
+        <li><strong>Memoria:</strong> SQLite (inicial), ChromaDB, sentence-transformers</li>
+        <li><strong>Inteligencia de código:</strong> tree-sitter</li>
+        <li><strong>Seguridad:</strong> cryptography, sandboxing por plataforma</li>
+        <li><strong>Frontend:</strong> React, TypeScript, Tailwind, Zustand</li>
+        <li><strong>Desktop:</strong> Electron</li>
+        <li><strong>Mobile:</strong> React Native (Android)</li>
+        <li><strong>Testing:</strong> pytest, x-dd</li>
+    </ul>
+
+    <h2>🔁 ARQUITECTURA (Pipeline de Ejecución)</h2>
+    <pre>
+User
+ │
+ ▼
+Interface Layer
+ │
+ ▼
+Agent Orchestrator
+ │
+ ▼
+Context Builder
+ │
+ ▼
+Memory Recall
+ │
+ ▼
+Decision Engine
+ │
+ ▼
+Tool Execution
+ │
+ ▼
+x-dd Validation
+ │
+ ▼
+Receipt Generation
+ │
+ ▼
+Memory Persistence
+    </pre>
+
+    <h2>🧩 MÓDULOS DEL SISTEMA</h2>
+    <ul>
+        <li><strong>Agent Orchestrator</strong> – <code>agentik/core/orchestrator.py</code></li>
+        <li><strong>Event Bus</strong> – <code>agentik/core/event_bus.py</code></li>
+        <li><strong>Context Builder</strong> – <code>agentik/core/context_builder.py</code></li>
+        <li><strong>Decision Engine</strong> – <code>agentik/core/decision_engine.py</code></li>
+        <li><strong>MemPalace</strong> – memoria persistente (wings obligatorias)</li>
+        <li><strong>Codex</strong> – AST, análisis de impacto, navegación</li>
+        <li><strong>Aegis</strong> – SAST + DAST (SQLi, XSS, Command Injection)</li>
+        <li><strong>Hermes</strong> – lessons, skills, aprendizaje operativo</li>
+        <li><strong>ZeroClaw</strong> – receipts, políticas, sandbox, permisos</li>
+    </ul>
+
+    <h2>🔧 CONTEXT BUILDER (Pipeline Obligatorio)</h2>
+    <pre>
+User Input
+      │
+      ▼
+Conversation Context
+      │
+      ▼
+Relevant Memories
+      │
+      ▼
+Relevant Lessons
+      │
+      ▼
+Relevant Skills
+      │
+      ▼
+Security Policies
+      │
+      ▼
+Final Context
+    </pre>
+    <p>Ningún módulo puede construir contexto por su cuenta.</p>
+
+    <h2>💾 MEMPALACE — WINGS OFICIALES</h2>
+    <ul>
+        <li><code>Conversations</code> – mensajes</li>
+        <li><code>Knowledge</code> – conocimiento estructurado</li>
+        <li><code>Lessons</code> – lecciones aprendidas</li>
+        <li><code>Skills</code> – patrones reutilizables</li>
+        <li><code>Audit</code> – receipts</li>
+        <li><code>Security</code> – hallazgos e incidentes</li>
+    </ul>
+
+    <h2>📡 SISTEMA DE EVENTOS (Mínimo)</h2>
+    <p>Eventos obligatorios:</p>
+    <pre>UserMessageReceived
+TaskStarted, TaskCompleted, TaskFailed
+CodeModified
+PipelineStarted, PipelinePassed, PipelineFailed
+LessonCreated, LessonUpdated
+SkillCreated, SkillExecuted
+SecurityIssueDetected
+ReceiptGenerated</pre>
+
+    <h2>🛠️ CONTRATO DE HERRAMIENTAS</h2>
+    <pre>class Tool:
+    name: str
+    description: str
+    async def validate(self, context)
+    async def execute(self, context)
+    async def rollback(self, context)</pre>
+
+    <h2>✅ X-DD RUNTIME Y ADAPTER</h2>
+    <p>x-dd es el runtime oficial de validación. Toda modificación debe pasar por: <code>/xdd-start</code> → <code>/xdd-build</code> → <code>/qa-review</code> → <code>/cierre-fase</code>.</p>
+    <pre>class XDDAdapter:
+    async def run_pipeline()
+    async def build()
+    async def qa_review()
+    async def close_phase()</pre>
+
+    <h2>🔌 API OFICIAL</h2>
+    <p>Base URL: <code>http://localhost:8000</code></p>
+    <table>
+        <thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr</thead>
+        <tbody>
+            <tr><td>POST</td><td>/chat</td><td>Enviar mensaje</td></tr>
+            <tr><td>WS</td><td>/ws/chat</td><td>Streaming interactivo</td></tr>
+            <tr><td>POST</td><td>/xdd/run</td><td>Ejecutar pipeline</td></tr>
+            <tr><td>GET</td><td>/codex/impact?symbol=...</td><td>Análisis de impacto</td></tr>
+            <tr><td>POST</td><td>/aegis/scan</td><td>Escaneo de seguridad</td></tr>
+            <tr><td>GET</td><td>/skills</td><td>Listar skills</td></tr>
+            <tr><td>POST</td><td>/skills/run</td><td>Ejecutar skill</td></tr>
+            <tr><td>GET</td><td>/health</td><td>Estado del sistema</td></tr>
+        </tbody>
+    </table>
+
+    <h2>🔒 SEGURIDAD — RECEIPTS</h2>
+    <pre>{
+  "id": "uuid",
+  "timestamp": "iso8601",
+  "action": "string",
+  "actor": "agentik",
+  "result": "success|failure",
+  "signature": "hmac"
+}</pre>
+    <p>Política: <strong>Validar → Ejecutar → Receipt → Persistir</strong></p>
+
+    <h2>📊 OBSERVABILIDAD (Métricas mínimas)</h2>
+    <pre>agentik_tasks_total
+agentik_memory_recall_seconds
+agentik_lessons_created
+agentik_vulnerabilities_detected
+agentik_pipelines_total</pre>
+    <p>Logs estructurados obligatorios desde Fase 0.</p>
+
+    <h2>🗺️ ROADMAP OFICIAL (Fases 0 a 8)</h2>
+    <p>Cada fase debe completarse en orden. Una fase se considera terminada solo cuando se cumplan los <strong>criterios de aceptación</strong> (ver más abajo).</p>
+
+    <div class="phase">
+        <h3>🔹 Fase 0 — Fundación (Ejecución inmediata)</h3>
+        <p><strong>Objetivo:</strong> Base mínima del agente: memoria, CLI, x-dd, receipts, observabilidad.</p>
+        <p><strong>Tareas concretas (orden obligatorio):</strong></p>
+        <ol>
+            <li><strong>0.1 Fork de MemPalace</strong> – Integrar cliente básico en <code>agentik/mempalace/</code>.</li>
+            <li><strong>0.2 CLI básica</strong> – Comando <code>agentik run "..."</code> que ejecuta comandos del sistema y guarda en MemPalace.</li>
+            <li><strong>0.3 Integración x-dd (Adapter)</strong> – Métodos <code>run_pipeline, build, qa_review, close_phase</code>.</li>
+            <li><strong>0.4 Receipts y seguridad</strong> – Generación HMAC-SHA256, almacenamiento en <code>Audit</code>.</li>
+            <li><strong>0.5 Observabilidad básica</strong> – Logs JSON y métricas internas.</li>
+        </ol>
+        <p><strong>Validación:</strong> Cada tarea tiene su pipeline <code>.xdd</code> en <code>tests/pipelines/</code>. Ejemplo para tarea 0.1:</p>
+        <pre>/xdd-start
+/agentik run "from agentik.mempalace import Client; c=Client(); c.store('test', wing='Test'); print(c.recall('test'))"
+/gate assert salida_contiene "test"
+/cierre-fase</pre>
+        <p>Pipeline maestro de fase: <code>tests/pipelines/fase0_completa.xdd</code> que ejecuta todas las tareas.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 1 — Orquestación</h3>
+        <p><strong>Objetivo:</strong> Implementar Event Bus, Context Builder y Agent Orchestrator.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li><code>agentik/core/event_bus.py</code> – Publicación/suscripción asíncrona.</li>
+            <li><code>agentik/core/context_builder.py</code> – Pipeline de contexto según especificación.</li>
+            <li><code>agentik/core/orchestrator.py</code> – Coordinación de tareas y herramientas.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline <code>fase1_valida.xdd</code> que prueba publicación de eventos, construcción de contexto y orquestación de una tarea simple.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 2 — API + UI (Web, Desktop, Mobile)</h3>
+        <p><strong>Objetivo:</strong> Exponer API REST/WebSocket y construir interfaces compartidas con React.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li>Servidor FastAPI con endpoints definidos.</li>
+            <li>Proyecto React (TypeScript + Tailwind) con chat y panel de control.</li>
+            <li>Wrapper Electron para escritorio (ejecutable .exe/.dmg).</li>
+            <li>App React Native para Android (APK básico).</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que lanza el servidor, envía un mensaje por WebSocket y verifica respuesta.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 3 — Codex (Inteligencia de código)</h3>
+        <p><strong>Objetivo:</strong> Análisis de código Python (AST, grafo de llamadas, impacto).</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li><code>agentik/native/codex.py</code> con tree-sitter para Python.</li>
+            <li>Comando <code>/impact &lt;símbolo&gt;</code> que retorna callers.</li>
+            <li>Integración automática antes de <code>/xdd-build</code>.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que modifica una función, ejecuta build y verifica que el agente muestra advertencia de impacto.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 4 — Aegis (Seguridad activa)</h3>
+        <p><strong>Objetivo:</strong> Detectar vulnerabilidades estáticas (SQLi, XSS, Command Injection).</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li>Análisis estático con tree-sitter + reglas.</li>
+            <li>Comando <code>/aegis-scan</code> y bloqueo de pipeline si se encuentra vulnerabilidad crítica.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que introduce una SQL injection a propósito, el agente debe detectarla y detener el flujo.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 5 — Hermes (Aprendizaje operativo)</h3>
+        <p><strong>Objetivo:</strong> Extraer lecciones de fallos repetidos y crear skills.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li><code>agentik/learning/lessons.py</code> – detección de fallos repetidos, generación de lecciones.</li>
+            <li><code>agentik/learning/skills.py</code> – registro de secuencias exitosas y ejecución de skills.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que fuerza un fallo dos veces, verifica que se crea una lección; luego repite una secuencia exitosa tres veces y verifica que se ofrezca una skill.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 6 — Sistema de Plugins</h3>
+        <p><strong>Objetivo:</strong> Permitir extensión dinámica sin modificar el núcleo.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li>Registro de plugins en <code>agentik/plugins/</code>.</li>
+            <li>Contrato <code>Plugin</code> con métodos <code>register()</code>.</li>
+            <li>Descubrimiento automático de plugins.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que carga un plugin de ejemplo y verifica que sus herramientas estén disponibles.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 7 — Auto-mejora controlada</h3>
+        <p><strong>Objetivo:</strong> El agente puede proponer parches a su propio código, validados con x-dd y aprobación humana.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li>Comando <code>/agentik self-improve</code>.</li>
+            <li>Flujo: oportunidad → parche → branch temporal → x-dd → Aegis → diff → aprobación → merge.</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que detecta una oportunidad de mejora, genera un parche, lo prueba y solicita aprobación.</p>
+    </div>
+
+    <div class="phase">
+        <h3>🔹 Fase 8 — Distribución y actualizaciones</h3>
+        <p><strong>Objetivo:</strong> Empaquetado y distribución continua.</p>
+        <p><strong>Entregables:</strong></p>
+        <ul>
+            <li>Generación de ejecutables de Electron (Windows, macOS, Linux) mediante GitHub Actions.</li>
+            <li>Generación de APK para Android.</li>
+            <li>Sistema de auto‑actualización (electron-updater + backend de releases).</li>
+        </ul>
+        <p><strong>Validación:</strong> Pipeline que descarga la última versión, la instala en un entorno limpio y ejecuta pruebas de humo.</p>
+    </div>
+
+    <h2>✅ CRITERIOS DE ACEPTACIÓN (por fase)</h2>
+    <ul>
+        <li>El código compila (no hay errores de sintaxis).</li>
+        <li>Todas las pruebas (pytest y pipelines x-dd) pasan.</li>
+        <li>x-dd aprueba el pipeline específico de la fase.</li>
+        <li>Existe al menos un receipt por cada acción nueva.</li>
+        <li>La evidencia se ha persistido en MemPalace (wing correspondiente).</li>
+        <li>La documentación se ha actualizado (docs/).</li>
+    </ul>
+
+    <h2>🏆 DEFINICIÓN DE ÉXITO FINAL</h2>
+    <p>Agentik será considerado exitoso cuando:</p>
+    <ul>
+        <li>Recuerde automáticamente información relevante de proyectos anteriores.</li>
+        <li>Aprenda patrones reutilizables (lecciones y skills) con mínima intervención.</li>
+        <li>Valide todos los cambios mediante x-dd antes de aceptarlos.</li>
+        <li>Detecte vulnerabilidades de seguridad antes de que el código llegue a producción.</li>
+        <li>Mantenga trazabilidad completa (receipts) de cada acción ejecutada.</li>
+        <li>Permita evolución segura mediante plugins y aprendizaje controlado.</li>
+        <li>Sea distribuible como aplicación de escritorio (Electron) y móvil (Android).</li>
+    </ul>
+
+    <h2>📋 INSTRUCCIONES PARA EL AGENTE DE DESARROLLO</h2>
+    <div class="note">
+        <ol>
+            <li><strong>Comienza por la Fase 0</strong> y no pases a la siguiente hasta que los criterios de aceptación de la fase actual se cumplan.</li>
+            <li><strong>Escribe los pipelines x-dd ANTES de escribir el código</strong> (desarrollo guiado por validación).</li>
+            <li><strong>Toda persistencia debe hacerse a través de MemPalace</strong> – no uses archivos sueltos fuera del palacio.</li>
+            <li><strong>Cada vez que modifiques una herramienta, actualiza su pipeline de prueba.</strong></li>
+            <li><strong>Respeta las reglas R1 a R7 estrictamente.</strong> La auto-mejora solo está permitida a partir de la Fase 7.</li>
+            <li><strong>Documenta cada módulo con docstrings y mantén cobertura de pruebas >80%.</strong></li>
+            <li><strong>Usa logging estructurado (JSON) para que el sistema pueda auto‑depurarse.</strong></li>
+            <li><strong>Si alguna ambigüedad surge, prioriza los principios P1 a P6 sobre cualquier interpretación personal.</strong></li>
+        </ol>
+    </div>
+
+    <div class="warning note">
+        ⚠️ <strong>RECORDATORIO FINAL:</strong> Este documento es la única fuente de verdad. No se permite desviación sin actualizar primero este documento y registrar un ADR. El objetivo es llegar a la Fase 8 con un agente funcional, seguro, distribuible y autosostenible.
+    </div>
+
+    <hr>
+    <footer>
+        🚀 AGENTIK v5.0 — Especificación completa para el desarrollo (Fases 0 a 8)<br>
+        El agente de desarrollo debe comenzar inmediatamente con la Fase 0, siguiendo las tareas y pipelines definidos.
+    </footer>
+</div>
+</body>
+</html>

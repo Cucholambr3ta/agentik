@@ -7,66 +7,90 @@
 
 ## Paso 1 — Activa el orquestador X-DD
 
-Ejecuta el siguiente comando slash para iniciar el pipeline:
+```
+/anmax
+```
 
-```
-/xdd
-```
+Cuando /anmax arranque, dile: **"lee el spec completo en deepseek_html_20260531_288131.html"**
 
 X-DD te guiará por las 6 fases del pipeline gated:
 `Briefing → Spec → Plan → Build → QA → Retro`
 
-Cada fase requiere aprobación explícita antes de continuar.
-**Nada se considera completo hasta que X-DD lo valide.**
+Cada fase requiere aprobación explícita. **Nada está terminado sin receipt.**
 
 ---
 
-## Contexto del proyecto
+## Spec vigente
 
-**AGENTIK v5.0** es un agente de desarrollo que usa X-DD como runtime de validación.
-
-El spec completo está en:
-```
-deepseek_html_20260531_a9ce8d.html
-```
-
-Ábrelo y léelo antes de ejecutar `/xdd`. Es el artefacto de la fase **Briefing**.
+| Archivo | Estado |
+|---|---|
+| `deepseek_html_20260531_288131.html` | ✅ **FUENTE DE VERDAD — usar este** |
+| `deepseek_html_20260531_a9ce8d.html` | ⚠️ Spec inicial incompleto (solo Fase 0) |
 
 ---
 
-## Qué construir (Phase 0 según el spec)
+## Estado actual del proyecto
 
-| Tarea | Módulo | Validación |
-|---|---|---|
-| 0.1 Fork MemPalace | `agentik/mempalace/` | `xdd gate approve briefing` |
-| 0.2 CLI básica | `agentik/channels/cli.py` | tests + gate |
-| 0.3 Adapter X-DD | `agentik/channels/xdd_adapter.py` | gate Build |
-| 0.4 Receipts HMAC | `agentik/security/receipts.py` | gate QA |
-| 0.5 Observabilidad | logging + métricas | gate QA |
+| Fase | Estado |
+|---|---|
+| Fase 0 — Fundación | ✅ Completada (mempalace fork, CLI, x-dd adapter, receipts, observabilidad) |
+| Fase 1 — Orquestación | ⏳ Pendiente |
+| Fase 2 — API + UI | ⏳ Pendiente |
+| Fase 3 — Codex | ⏳ Pendiente |
+| Fase 4 — Aegis | ⏳ Pendiente |
+| Fase 5 — Hermes | ⏳ Pendiente |
+| Fase 6-8 | ⏳ Pendiente |
+
+**Gate X-DD:** todas las fases aprobadas hasta Fase 0. Continuar desde Fase 1.
+
+---
+
+## Lo que falta ANTES de continuar con Fase 1
+
+El proyecto tiene código funcionando pero **no es instalable** todavía.
+Completa esto primero (en orden):
+
+1. **`pyproject.toml`** — name=agentik, version=0.1.0, requires-python>=3.11,
+   dependencies=[x-dd>=0.2.0 + las que el código usa], entry-point `agentik = "agentik.__main__:main"`
+2. **`VERSION`** — contenido: `0.1.0`
+3. **`CHANGELOG.md`** — sección `## [0.1.0] — unreleased`
+4. **Fix portabilidad** — `agentik/channels/xdd_adapter.py:25` tiene ruta hardcodeada
+   `/home/alejandro/Documentos/Desarrollos/scripts/xdd-gate.py`. Reemplazar por
+   `subprocess.run(["xdd", "gate", ...])` usando xdd del PATH.
+5. **`.github/workflows/tests.yml`** — pytest 3.10/3.11/3.12 + xdd doctor + shield audit
+
+Verifica con:
+```bash
+pip install -e .
+agentik --help
+python3 -m pytest tests/ -v
+xdd doctor
+```
 
 ---
 
 ## Reglas de trabajo
 
-1. **Siempre** trabajar en rama `develop` o `feat/*`. Nunca directo a `main`.
+1. Trabajar en rama `develop` o `feat/*`. Nunca directo a `main`.
 2. Cada tarea → un PR → revisión → merge.
-3. Antes de abrir un PR: `xdd gate status` debe mostrar la fase activa en progreso.
-4. El release a PyPI solo ocurre cuando **todas las fases** del gate están `APROBADO`.
-5. Cuando X-DD publique una nueva versión, llegará un PR automático con las mejoras.
-   Revísalo y apruébalo antes de continuar desarrollando.
+3. `xdd gate status` debe mostrar la fase activa antes de abrir un PR.
+4. Release a PyPI solo cuando **todas las fases** del gate estén `APROBADO`.
+5. NUNCA rutas absolutas del host en el código (`/home/alejandro/...`).
+6. Cuando x-dd publique una nueva versión, llegará un PR automático. Revísalo antes de continuar.
 
 ---
 
 ## Comandos clave
 
 ```bash
-xdd doctor          # verifica el entorno
-xdd gate status     # estado del pipeline
-xdd gate approve <fase>   # aprobar una fase
-xdd update check    # ver si hay actualizaciones de X-DD disponibles
-xdd update apply    # aplicar actualizaciones
+xdd --version           # debe ser ≥ 0.2.0
+xdd doctor              # verifica el entorno
+xdd gate status         # estado del pipeline
+xdd gate approve <fase> # aprobar una fase
+xdd update check        # ver si hay actualizaciones de X-DD
+xdd update apply        # aplicar actualizaciones
 ```
 
 ---
 
-*Desarrollado sobre X-DD v0.2.0 · Motor: `pip install x-dd` · Repo: Cucholambr3ta/x-dd*
+*AGENTIK v5.0 · Motor: x-dd 0.2.0 · Spec: deepseek_html_20260531_288131.html*
