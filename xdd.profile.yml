@@ -1,5 +1,7 @@
 # AGENTIK v5.0 — Perfil del Proyecto
 
+profile: internal
+
 project:
   name: AGENTIK
   version: "5.0.0"
