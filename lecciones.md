@@ -72,3 +72,24 @@
 **Causa raíz:** Se priorizó la velocidad sobre el proceso.
 **Lección:** Seguir el pipeline X-DD en orden. Cada fase requiere aprobación explícita antes de continuar. No saltar fases.
 **Aplica a:** Todo proyecto bajo X-DD.
+
+### [ARQUITECTURA] MemPalace fork desde uv local — 2026-05-31
+**Contexto:** Fase 0.1 — Fork MemPalace.
+**Problema:** No existía repo remoto de MemPalace para clonar.
+**Causa raíz:** MemPalace instalado via uv, no como paquete editable.
+**Lección:** Copiar desde `/home/.../.local/share/uv/tools/mempalace/lib/python*/site-packages/mempalace/` cuando no hay repo remoto.
+**Aplica a:** Fork de dependencias instaladas localmente.
+
+### [TESTING] Tests antes de gate approval — 2026-05-31
+**Contexto:** Fase 0 — gate qa approval.
+**Problema:** Gate exige QA_REPORT.md con tests ejecutados.
+**Causa raíz:** No se crearon tests unitarios al inicio.
+**Lección:** Crear tests en `tests/` ANTES de aprobar gate qa. Ejecutar `pytest -v` y documentar resultados.
+**Aplica a:** Todas las fases del pipeline.
+
+### [DEVOPS] Artefactos de gate son obligatorios — 2026-05-31
+**Contexto:** Aprobación de fases briefing, spec, plan, qa, retro.
+**Problema:** Gate rechazaba aprobación por artefactos faltantes (.xdd/*/).
+**Causa raíz:** No se crearon directorios y archivos requeridos por el gate.
+**Lección:** Crear `.xdd/<fase>/` con los artefactos obligatorios ANTES de ejecutar `xdd-gate.py approve`.
+**Aplica a:** Transiciones entre fases del pipeline.
