@@ -1,0 +1,4 @@
+/xdd-start
+/agentik run "python3 -c 'from agentik.channels.xdd_adapter import XDDAdapter; a=XDDAdapter(); print(str(a.build()))'"
+/gate assert salida_contiene "status"
+/cierre-fase

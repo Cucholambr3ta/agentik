@@ -1,0 +1,4 @@
+/xdd-start
+/agentik run "python3 -c 'from agentik.mempalace import cli; print(\"ok\")'"
+/gate assert salida_contiene "ok"
+/cierre-fase

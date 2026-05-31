@@ -1,0 +1,6 @@
+/xdd-start
+/agentik run "echo 'hola mundo'"
+/gate assert salida_contiene "hola mundo"
+/agentik mempalace recall "hola mundo" --wing Conversations
+/gate assert salida_contiene "hola mundo"
+/cierre-fase

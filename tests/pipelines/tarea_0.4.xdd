@@ -1,0 +1,4 @@
+/xdd-start
+/agentik run "python3 -c 'from agentik.security.receipts import generate_receipt; r=generate_receipt(\"test\",\"success\"); print(r[\"signature\"])'"
+/gate assert salida_coincide_regex "[a-f0-9]{64}"
+/cierre-fase

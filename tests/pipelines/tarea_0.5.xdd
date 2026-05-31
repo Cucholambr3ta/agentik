@@ -1,0 +1,4 @@
+/xdd-start
+/agentik run "python3 -c 'import logging; logging.info(\"test\"); print(\"test\")'"
+/gate assert salida_contiene "test"
+/cierre-fase

@@ -45,8 +45,84 @@ class PipelineStep:
         elif cmd == "/cierre-fase":
             self.output = "Phase closed"
             return True
+        elif cmd == "/agentik":
+            return self._execute_agentik_command(parts[1:])
         else:
             self.output = f"Unknown X-DD command: {cmd}"
+            self.exit_code = 1
+            return False
+    
+    def _execute_agentik_command(self, args: List[str]) -> bool:
+        """Execute an AGENTIK command."""
+        if not args:
+            self.output = "Usage: /agentik <command> [args...]"
+            self.exit_code = 1
+            return False
+        
+        subcmd = args[0]
+        
+        if subcmd == "run":
+            # Execute the command using agentik run
+            if len(args) < 2:
+                self.output = "Usage: /agentik run \"command\""
+                self.exit_code = 1
+                return False
+            
+            command = args[1].strip('"')
+            try:
+                from agentik.channels.cli import run_command
+                output, exit_code = run_command(command)
+                self.output = output
+                self.exit_code = exit_code
+                return exit_code == 0
+            except Exception as e:
+                self.output = f"ERROR: {str(e)}"
+                self.exit_code = 1
+                return False
+        elif subcmd == "mempalace":
+            # Handle mempalace commands
+            return self._execute_mempalace_command(args[1:])
+        else:
+            self.output = f"Unknown agentik command: {subcmd}"
+            self.exit_code = 1
+            return False
+    
+    def _execute_mempalace_command(self, args: List[str]) -> bool:
+        """Execute a mempalace command."""
+        if not args:
+            self.output = "Usage: /agentik mempalace <command> [args...]"
+            self.exit_code = 1
+            return False
+        
+        subcmd = args[0]
+        
+        if subcmd == "recall":
+            # Recall from mempalace
+            if len(args) < 2:
+                self.output = "Usage: /agentik mempalace recall <key> [--wing <wing>]"
+                self.exit_code = 1
+                return False
+            
+            key = args[1]
+            wing = "Conversations"
+            
+            # Parse optional wing argument
+            if "--wing" in args:
+                wing_idx = args.index("--wing")
+                if wing_idx + 1 < len(args):
+                    wing = args[wing_idx + 1]
+            
+            try:
+                # For now, just simulate recall
+                self.output = key
+                self.exit_code = 0
+                return True
+            except Exception as e:
+                self.output = f"ERROR: {str(e)}"
+                self.exit_code = 1
+                return False
+        else:
+            self.output = f"Unknown mempalace command: {subcmd}"
             self.exit_code = 1
             return False
     

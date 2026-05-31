@@ -1,0 +1,5 @@
+/xdd-start
+/agentik run "python3 -c 'from agentik.channels.xdd_adapter import XDDAdapter; a=XDDAdapter(); print(str(a.build()))'"
+/agentik run "python3 -c 'from agentik.channels.xdd_adapter import XDDAdapter; a=XDDAdapter(); print(str(a.qa_review()))'"
+/agentik run "python3 -c 'from agentik.channels.xdd_adapter import XDDAdapter; a=XDDAdapter(); print(str(a.close_phase()))'"
+/cierre-fase
