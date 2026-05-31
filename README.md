@@ -38,6 +38,11 @@ agentik --help
 
 **Prerequisites:** `pip install x-dd` (x-dd is the validation engine)
 
+For x-dd 0.2.0 (recommended):
+```bash
+pipx install git+https://github.com/Cucholambr3ta/x-dd.git@develop
+```
+
 ## Quick Start
 
 ### Run a command

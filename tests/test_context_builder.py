@@ -46,3 +46,77 @@ def test_context_builder_final_context():
     assert "user_input" in context.final_context
     assert "conversation_length" in context.final_context
     assert "timestamp" in context.final_context
+
+
+# === REAL LOGIC TESTS ===
+
+
+def test_context_builder_pipeline_order():
+    """Test that context builder follows spec pipeline order."""
+    call_order = []
+    
+    builder = ContextBuilder()
+    
+    # Track call order by checking final_context
+    original_get_conversation = builder._get_conversation_context
+    original_get_memories = builder._get_relevant_memories
+    original_get_lessons = builder._get_relevant_lessons
+    original_get_skills = builder._get_relevant_skills
+    original_get_security = builder._get_security_policies
+    
+    def track_conversation(user_input):
+        call_order.append("conversation")
+        return original_get_conversation(user_input)
+    
+    def track_memories(user_input):
+        call_order.append("memories")
+        return original_get_memories(user_input)
+    
+    def track_lessons(user_input):
+        call_order.append("lessons")
+        return original_get_lessons(user_input)
+    
+    def track_skills(user_input):
+        call_order.append("skills")
+        return original_get_skills(user_input)
+    
+    def track_security(user_input):
+        call_order.append("security")
+        return original_get_security(user_input)
+    
+    builder._get_conversation_context = track_conversation
+    builder._get_relevant_memories = track_memories
+    builder._get_relevant_lessons = track_lessons
+    builder._get_relevant_skills = track_skills
+    builder._get_security_policies = track_security
+    
+    builder.build("Test input")
+    
+    # Pipeline order: conversation → memories → lessons → skills → security
+    assert call_order == ["conversation", "memories", "lessons", "skills", "security"]
+
+
+def test_context_builder_empty_input():
+    """Test building context with empty input."""
+    builder = ContextBuilder()
+    context = builder.build("")
+    
+    assert context.user_input == ""
+    assert context.final_context["user_input"] == ""
+
+
+def test_context_builder_conversation_limit():
+    """Test that conversation context is limited to 10 messages."""
+    builder = ContextBuilder()
+    
+    # Add 15 messages
+    for i in range(15):
+        builder.add_to_conversation("user", f"Message {i}")
+    
+    context = builder.build("New message")
+    
+    # Should only keep last 10
+    assert len(context.conversation) == 10
+    assert context.conversation[0]["content"] == "Message 5"
+    assert context.conversation[-1]["content"] == "Message 14"
+

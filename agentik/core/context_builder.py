@@ -1,8 +1,16 @@
 """AGENTIK Context Builder — Pipeline de contexto según especificación."""
 
+import os
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
+
+try:
+    from agentik.mempalace.searcher import Searcher
+    from agentik.mempalace.config import MempalaceConfig
+    _MEMPALACE_AVAILABLE = True
+except ImportError:
+    _MEMPALACE_AVAILABLE = False
 
 
 @dataclass
@@ -28,6 +36,13 @@ class ContextBuilder:
     
     def __init__(self):
         self._conversation_history: List[Dict[str, Any]] = []
+        self._searcher: Optional[Any] = None
+        if _MEMPALACE_AVAILABLE:
+            try:
+                config = MempalaceConfig()
+                self._searcher = Searcher(palace_path=config.palace_path)
+            except Exception:
+                self._searcher = None
     
     def build(self, user_input: str) -> Context:
         """Build context from user input following the pipeline."""
@@ -58,23 +73,73 @@ class ContextBuilder:
         return self._conversation_history[-10:]  # Last 10 messages
     
     def _get_relevant_memories(self, user_input: str) -> List[Dict[str, Any]]:
-        """Get relevant memories from MemPalace."""
-        # Placeholder for MemPalace integration
-        return []
+        """Get relevant memories from MemPalace via Searcher."""
+        if not self._searcher or not _MEMPALACE_AVAILABLE:
+            return []
+        try:
+            results = self._searcher.search(user_input, n_results=5)
+            memories = []
+            if results and results.get("drawers"):
+                for doc, meta, dist in zip(
+                    results["drawers"].get("documents", [[]])[0] if results["drawers"].get("documents") else [],
+                    results["drawers"].get("metadatas", [[]])[0] if results["drawers"].get("metadatas") else [],
+                    results["drawers"].get("distances", [[]])[0] if results["drawers"].get("distances") else []
+                ):
+                    memories.append({
+                        "content": doc,
+                        "metadata": meta,
+                        "relevance": 1.0 - dist if dist else 0.0
+                    })
+            return memories
+        except Exception:
+            return []
     
     def _get_relevant_lessons(self, user_input: str) -> List[Dict[str, Any]]:
-        """Get relevant lessons from MemPalace."""
-        # Placeholder for MemPalace integration
-        return []
+        """Get relevant lessons from MemPalace (Knowledge wing)."""
+        if not self._searcher or not _MEMPALACE_AVAILABLE:
+            return []
+        try:
+            results = self._searcher.search(user_input, wing="knowledge", n_results=3)
+            lessons = []
+            if results and results.get("drawers"):
+                for doc, meta, dist in zip(
+                    results["drawers"].get("documents", [[]])[0] if results["drawers"].get("documents") else [],
+                    results["drawers"].get("metadatas", [[]])[0] if results["drawers"].get("metadatas") else [],
+                    results["drawers"].get("distances", [[]])[0] if results["drawers"].get("distances") else []
+                ):
+                    lessons.append({
+                        "content": doc,
+                        "metadata": meta,
+                        "type": "lesson"
+                    })
+            return lessons
+        except Exception:
+            return []
     
     def _get_relevant_skills(self, user_input: str) -> List[Dict[str, Any]]:
-        """Get relevant skills from MemPalace."""
-        # Placeholder for MemPalace integration
-        return []
+        """Get relevant skills from MemPalace (Technical wing)."""
+        if not self._searcher or not _MEMPALACE_AVAILABLE:
+            return []
+        try:
+            results = self._searcher.search(user_input, wing="technical", n_results=3)
+            skills = []
+            if results and results.get("drawers"):
+                for doc, meta, dist in zip(
+                    results["drawers"].get("documents", [[]])[0] if results["drawers"].get("documents") else [],
+                    results["drawers"].get("metadatas", [[]])[0] if results["drawers"].get("metadatas") else [],
+                    results["drawers"].get("distances", [[]])[0] if results["drawers"].get("distances") else []
+                ):
+                    skills.append({
+                        "content": doc,
+                        "metadata": meta,
+                        "type": "skill"
+                    })
+            return skills
+        except Exception:
+            return []
     
     def _get_security_policies(self, user_input: str) -> List[Dict[str, Any]]:
         """Get security policies."""
-        # Placeholder for security policies
         return [
             {"policy": "no_absolute_paths", "description": "Never use absolute host paths"},
             {"policy": "no_hardcoded_secrets", "description": "Never hardcode secrets"},

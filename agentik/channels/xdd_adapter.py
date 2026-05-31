@@ -78,22 +78,61 @@ class XDDAdapter:
             return {"status": "failure", "error": str(e), "receipt": receipt}
 
     def build(self) -> Dict:
-        """Run xdd-build phase."""
-        receipt = self._generate_receipt("build", "success", "xdd-build")
-        self.audit_log.append(receipt)
-        return {"status": "success", "receipt": receipt}
+        """Run xdd gate validate build."""
+        try:
+            result = subprocess.run(
+                ["xdd", "gate", "validate", "build"],
+                capture_output=True,
+                text=True,
+                cwd=self.project_root,
+                timeout=60
+            )
+            success = result.returncode == 0
+            receipt = self._generate_receipt("build", "success" if success else "failure", "xdd-build")
+            self.audit_log.append(receipt)
+            return {"status": "success" if success else "failure", "output": result.stdout, "error": result.stderr, "receipt": receipt}
+        except Exception as e:
+            receipt = self._generate_receipt("build", "failure", "xdd-build")
+            self.audit_log.append(receipt)
+            return {"status": "failure", "error": str(e), "receipt": receipt}
 
     def qa_review(self) -> Dict:
-        """Run xdd-qa-review phase."""
-        receipt = self._generate_receipt("qa_review", "success", "qa-review")
-        self.audit_log.append(receipt)
-        return {"status": "success", "receipt": receipt}
+        """Run xdd gate validate qa."""
+        try:
+            result = subprocess.run(
+                ["xdd", "gate", "validate", "qa"],
+                capture_output=True,
+                text=True,
+                cwd=self.project_root,
+                timeout=60
+            )
+            success = result.returncode == 0
+            receipt = self._generate_receipt("qa_review", "success" if success else "failure", "qa-review")
+            self.audit_log.append(receipt)
+            return {"status": "success" if success else "failure", "output": result.stdout, "error": result.stderr, "receipt": receipt}
+        except Exception as e:
+            receipt = self._generate_receipt("qa_review", "failure", "qa-review")
+            self.audit_log.append(receipt)
+            return {"status": "failure", "error": str(e), "receipt": receipt}
 
     def close_phase(self) -> Dict:
-        """Run xdd-cierre-fase phase."""
-        receipt = self._generate_receipt("close_phase", "success", "cierre-fase")
-        self.audit_log.append(receipt)
-        return {"status": "success", "receipt": receipt}
+        """Run xdd cierre-fase."""
+        try:
+            result = subprocess.run(
+                ["xdd", "cierre-fase"],
+                capture_output=True,
+                text=True,
+                cwd=self.project_root,
+                timeout=60
+            )
+            success = result.returncode == 0
+            receipt = self._generate_receipt("close_phase", "success" if success else "failure", "cierre-fase")
+            self.audit_log.append(receipt)
+            return {"status": "success" if success else "failure", "output": result.stdout, "error": result.stderr, "receipt": receipt}
+        except Exception as e:
+            receipt = self._generate_receipt("close_phase", "failure", "cierre-fase")
+            self.audit_log.append(receipt)
+            return {"status": "failure", "error": str(e), "receipt": receipt}
 
     def _generate_receipt(self, action: str, result: str, pipeline: str) -> Dict:
         """Generate an audit receipt."""
