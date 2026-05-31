@@ -93,3 +93,17 @@
 **Causa raíz:** No se crearon directorios y archivos requeridos por el gate.
 **Lección:** Crear `.xdd/<fase>/` con los artefactos obligatorios ANTES de ejecutar `xdd-gate.py approve`.
 **Aplica a:** Transiciones entre fases del pipeline.
+
+### [ARQUITECTURA] Módulos independientes para integraciones — 2026-05-31
+**Contexto:** Phase 2 — Integration (GitNexus, Security Audit).
+**Problema:** Integraciones acopladas al core.
+**Causa raíz:** Falta de separación de responsabilidades.
+**Lección:** Crear módulos independientes (gitnexus.py, security_audit.py) que encapsulen cada integración.
+**Aplica a:** Integraciones con herramientas externas.
+
+### [TESTING] Tests de integración vs unitarios — 2026-05-31
+**Contexto:** Phase 2 — Testing de módulos nuevos.
+**Problema:** Tests de integración dependen de herramientas instaladas.
+**Causa raíz:** No se mockearon dependencias externas.
+**Lección:** Mantener tests unitarios separados de tests de integración. Usar pytest marks para diferenciar.
+**Aplica a:** Tests que dependen de herramientas externas.
